@@ -2,6 +2,8 @@
 
 > **A deterministic candidate data transformation pipeline that merges structured and unstructured candidate information into a provenance-aware canonical profile with configurable runtime projection.**
 
+This project was developed as part of the Eightfold AI Backend/Data Engineer internship assignment and demonstrates a deterministic pipeline for transforming heterogeneous candidate data into a unified canonical profile.
+
 ---
 
 ## 1. System Architecture
@@ -27,20 +29,20 @@ The pipeline processes heterogeneous data sources linearly through modular stage
                       Provenance & Confidence
                                  │
                                  ▼
-                      Group & Merge Identical
-                     (Graph-based email/phone)
+                     Identity Matching & Merge
+                    (Graph-based email/phone)
                                  │
                                  ▼
                     Conflict Resolution Policy
                     (Highest conf. -> CSV > Resume)
                                  │
                                  ▼
-                             Validate
-                        (Pydantic Schema)
+                            Schema Validation
+                               (Pydantic)
                                  │
                                  ▼
                        Runtime Projection
-                        (Config JSONPath)
+                       (Config Path-based)
                                  │
                                  ▼
                         [ Final Output JSON ]
@@ -53,7 +55,7 @@ The pipeline processes heterogeneous data sources linearly through modular stage
 ```text
 candidate-transformer/
 ├── main.py                 # CLI entry point & orchestrator
-├── requirements.txt         # Project dependencies (pdfplumber, docx, phonenumbers, pydantic)
+├── requirements.txt         # Project dependencies
 ├── config/
 │   └── custom.json         # Custom output projection schema definition
 ├── inputs/
@@ -99,13 +101,13 @@ The parser layer is fully decoupled from the normalization and merge pipeline. A
 ## 4. Pipeline Execution Details
 
 ### A. Normalization Rules
-* **Phone Numbers**: Normalizes strings to international E.164 format (e.g., `(415) 555-2671` -> `+14155552671`) using the Google `phonenumbers` port.
+* **Phone Numbers**: Normalizes strings to international E.164 format (e.g., `(415) 555-2671` -> `+14155552671`) via E.164 normalization.
 * **Skills**: Maps spelling variations and synonyms (e.g., "JS", "Java Script" -> "JavaScript") using an extensible synonym lookup dictionary.
 * **Dates**: Converts various date strings to standard `YYYY-MM` format.
 
 ### B. Grouping & Identity Merging
-* Candidates are grouped into single profiles using **disjoint-set union / component graph matching**. 
-* If two profiles share at least one exact match on a normalized **email** or **phone number**, they are identified as the same candidate and merged.
+* Candidates are grouped into single profiles using **identity matching on normalized email and phone keys**.
+* A graph of candidates is dynamically constructed where edges link records sharing an email or phone. Connected components of the graph are then merged.
 
 ### C. Conflict Resolution Policy
 When merging scalar attributes (e.g., `full_name`) with conflicting values, the pipeline deterministically resolves the conflict using this sequence:
@@ -124,7 +126,7 @@ When merging scalar attributes (e.g., `full_name`) with conflicting values, the 
 
 ## 5. Runtime Projection Layer
 
-Different consumer endpoints require different schema configurations. The projection layer uses runtime JSON files to filter, rename, and reshape the canonical data dynamically.
+Different downstream applications require different schema configurations. The projection layer uses runtime JSON files to filter, rename, and reshape the canonical data dynamically via path-based configuration mapping.
 
 ### Example Config:
 ```json
@@ -139,7 +141,7 @@ Different consumer endpoints require different schema configurations. The projec
 }
 ```
 * **Default mapping**: If no configuration is supplied, the pipeline outputs the full, provenance-aware canonical schema.
-* **Custom mapping**: When `--config` is provided, fields are mapped from paths (e.g., `emails[0].value` becomes `contact_email` in the output, and list operations like `skills[].name` extract only the skill names).
+* **Custom mapping**: When `--config` is provided, fields are mapped from path-based expressions (e.g., `emails[0].value` becomes `contact_email` in the output, and list operations like `skills[].name` extract only the skill names).
 
 ---
 
@@ -165,7 +167,7 @@ python main.py --csv inputs/candidate.csv --resume inputs/resume.txt --config co
 ```
 
 ### Running Tests
-To execute all 9 unit tests verifying formatting, merging, conflict resolution, and projection:
+To execute all unit tests verifying formatting, merging, conflict resolution, and projection:
 ```bash
 PYTHONPATH=. pytest tests/
 ```
@@ -178,7 +180,7 @@ PYTHONPATH=. pytest tests/
 ```json
 [
   {
-    "candidate_id": "142d78e466cacab37c3751a6ba0d288ce40db609ce9c49617ea6b24665f1aa9c",
+    "candidate_id": "142d78e4...",
     "full_name": "John Doe",
     "emails": [
       "john@gmail.com"
