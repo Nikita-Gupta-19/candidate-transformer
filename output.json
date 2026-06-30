@@ -1,12 +1,12 @@
 [
   {
-    "candidate_id": "142d78e466cacab37c3751a6ba0d288ce40db609ce9c49617ea6b24665f1aa9c",
-    "full_name": "John Doe",
+    "candidate_id": "e69cbdf7fe80efcb5c4c4f53e45c51cd35bbb23cf128d41cfdcb55d8369cc8b4",
+    "full_name": "Nikita Gupta",
     "emails": [
-      "john@gmail.com"
+      "nikitagpt06@gmail.com"
     ],
     "phones": [
-      "+919876543210"
+      "+919818134486"
     ],
     "location": null,
     "links": null,
@@ -52,7 +52,7 @@
       }
     ],
     "education": [],
-    "overall_confidence": 0.8833,
+    "overall_confidence": 0.9056,
     "provenance": [
       {
         "field": "full_name",
@@ -76,8 +76,8 @@
       },
       {
         "field": "phones[0]",
-        "source": "resume:resume.txt",
-        "method": "regex"
+        "source": "csv",
+        "method": "csv_column"
       },
       {
         "field": "skills[0]",
@@ -110,12 +110,14 @@
     ]
   },
   {
-    "candidate_id": "f2d1f1c853fd1f4be1eb5060eaae93066c877d069473795e31db5e70c4880859",
-    "full_name": "Jane Smith",
+    "candidate_id": "7872f5192ca7ca8e8c868ab58289f25028c8a626d74ab02c0e5a4dd725ef9102",
+    "full_name": "Manav Garg",
     "emails": [
-      "jane.smith@example.com"
+      "manavgarg2209@gmail.com"
     ],
-    "phones": [],
+    "phones": [
+      "+918630029486"
+    ],
     "location": null,
     "links": null,
     "headline": null,
@@ -165,6 +167,11 @@
       },
       {
         "field": "emails[0]",
+        "source": "csv",
+        "method": "csv_column"
+      },
+      {
+        "field": "phones[0]",
         "source": "csv",
         "method": "csv_column"
       },
