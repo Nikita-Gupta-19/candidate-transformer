@@ -42,7 +42,7 @@ The pipeline processes heterogeneous data sources linearly through modular stage
                                  │
                                  ▼
                        Runtime Projection
-                       (Config Path-based)
+                  (Path-based Configuration)
                                  │
                                  ▼
                         [ Final Output JSON ]
@@ -112,8 +112,10 @@ The parser layer is fully decoupled from the normalization and merge pipeline. A
 ### C. Conflict Resolution Policy
 When merging scalar attributes (e.g., `full_name`) with conflicting values, the pipeline deterministically resolves the conflict using this sequence:
 1. **Highest Confidence Score Wins**: The value with the higher calculated confidence is selected.
-2. **Source Priority Tie-Breaker**: Structured (CSV) > Unstructured (Resume) > Recruiter Notes.
+2. **Source Priority Tie-Breaker**: Structured (CSV) > Unstructured (Resume).
 3. **Lexicographical Tie-Breaker**: If confidence and sources are identical, the alphabetically first string value is chosen, guaranteeing identical output across runs.
+
+The priority model is extensible; additional source types (e.g., Recruiter Notes or LinkedIn) can be assigned source-specific priorities without modifying the merge algorithm.
 
 ### D. Confidence & Provenance Model
 * **Base Confidences**:
