@@ -58,10 +58,12 @@ def build_provenance_list(profile: CanonicalProfile) -> List[Dict[str, Any]]:
     
     if profile.full_name:
         prov.append({"field": "full_name", "source": profile.full_name.source, "method": profile.full_name.method})
+    
+    # Map current_company and title provenance to experience[0]
     if profile.current_company:
-        prov.append({"field": "current_company", "source": profile.current_company.source, "method": profile.current_company.method})
+        prov.append({"field": "experience[0].company", "source": profile.current_company.source, "method": profile.current_company.method})
     if profile.title:
-        prov.append({"field": "title", "source": profile.title.source, "method": profile.title.method})
+        prov.append({"field": "experience[0].title", "source": profile.title.source, "method": profile.title.method})
         
     for i, e in enumerate(profile.emails):
         prov.append({"field": f"emails[{i}]", "source": e.source, "method": e.method})
@@ -84,14 +86,28 @@ class Projector:
         # If no fields defined, return the full canonical profile dumped
         if "fields" not in self.config:
             # Build default schema
+            experience_list = []
+            for exp in profile.experience:
+                experience_list.append({
+                    "company": exp.company,
+                    "title": exp.title,
+                    "start": exp.start,
+                    "end": exp.end,
+                    "summary": exp.summary
+                })
+            
             out = {
                 "candidate_id": profile.candidate_id,
                 "full_name": profile.full_name.value if profile.full_name else None,
                 "emails": [e.value for e in profile.emails],
                 "phones": [p.value for p in profile.phones],
-                "current_company": profile.current_company.value if profile.current_company else None,
-                "title": profile.title.value if profile.title else None,
+                "location": None,
+                "links": None,
+                "headline": None,
+                "years_experience": None,
                 "skills": [{"name": s.name, "confidence": s.confidence, "sources": s.sources} for s in profile.skills],
+                "experience": experience_list,
+                "education": [],
                 "overall_confidence": profile.overall_confidence
             }
             if self.config.get("include_confidence", True):

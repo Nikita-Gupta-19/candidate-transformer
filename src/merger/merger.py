@@ -96,6 +96,17 @@ def merge_profiles(profiles: List[CanonicalProfile]) -> CanonicalProfile:
     merged.current_company = resolve_scalar(companies)
     merged.title = resolve_scalar(titles)
     
+    # Map current_company and title to experience list
+    if merged.current_company or merged.title:
+        from src.models import ExperienceItemSchema
+        merged.experience = [ExperienceItemSchema(
+            company=merged.current_company.value if merged.current_company else None,
+            title=merged.title.value if merged.title else None,
+            start=None,
+            end=None,
+            summary=None
+        )]
+        
     # Assign lists
     merged.emails = list(email_map.values())
     merged.phones = list(phone_map.values())
