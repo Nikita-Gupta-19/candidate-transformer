@@ -1,0 +1,13 @@
+Johnathan Doe
+Software Engineer at Google LLC
+
+Contact:
+Email: john@gmail.com
+Phone: +91 987 654 3210
+
+Experience:
+Microsoft
+2023-Present
+
+Skills:
+I am proficient in Python, Java Script, C++, and Node.js.

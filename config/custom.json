@@ -1,0 +1,9 @@
+{
+  "fields": [
+    { "path": "contact_email", "from": "emails[0].value", "required": true },
+    { "path": "primary_phone", "from": "phones[0].value" },
+    { "path": "top_skills", "from": "skills[].name" }
+  ],
+  "include_confidence": false,
+  "on_missing": "null"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "contact_email": "john@gmail.com",
+    "primary_phone": "+919876543210",
+    "top_skills": [
+      "Python",
+      "Machine Learning",
+      "JavaScript",
+      "Node.js"
+    ]
+  },
+  {
+    "contact_email": "jane.smith@example.com",
+    "primary_phone": null,
+    "top_skills": [
+      "Java",
+      "JavaScript"
+    ]
+  }
+]

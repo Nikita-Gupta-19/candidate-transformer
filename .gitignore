@@ -1,0 +1,17 @@
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# OS Files
+.DS_Store
+
+# Temporary outputs (can be generated locally)
+# but we will keep output.json and custom_output.json in the repo if they are required to be submitted.

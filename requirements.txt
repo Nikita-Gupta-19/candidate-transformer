@@ -1,0 +1,6 @@
+pydantic
+pdfplumber
+python-docx
+phonenumbers
+email-validator
+pytest
